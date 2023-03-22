@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    container_name: db
+    healthcheck:
+      test: /healthchecks/postgres.sh
+      interval: "30s"
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PW}
+      - POSTGRES_DB=${POSTGRES_DB}
+    networks:
+      - server-side
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgresql/library.postgresql.sql:/docker-entrypoint-initdb.d/data.sql
+      - db-data:/var/lib/postgresql/data
+      - ./healthchecks:/healthchecks    
+
+  adminer:
+    image: adminer
+    restart: always
+    container_name: adminer
+    networks:
+      - server-side
+    ports:
+      - 8080:8080
+
+volumes:
+  db-data:
+    name: dab-postgresql
+
+networks:
+  server-side:
+    name: dab-postgresql
