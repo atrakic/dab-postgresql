@@ -1,38 +1,72 @@
 services:
+  app:
+    image: swacli/static-web-apps-cli:latest
+    container_name: app
+    restart: on-failure
+    working_dir: /workspace
+    command: swa start -p 3000 /workspace --api-location /api --api-devserver-url http://dab:5000
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:3000/ || exit 1"]
+      interval: "30s"
+    volumes:
+      - ${PWD}/app/src:/workspace
+    environment:
+      - DEBUG=*
+    networks:
+      - client-side
+    ports:
+      - 3000:3000
+    depends_on:
+      - dab
+  dab:
+    image: "mcr.microsoft.com/azure-databases/data-api-builder:latest"
+    container_name: dab
+    ##entrypoint: ["echo", "Service dab disabled"]
+    #tty: true
+    #stdin_open: true
+    ports:
+      - "5000:5000"
+    environment:
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - DOTNET_EnableDiagnostics=0
+      - ASPNETCORE_hostBuilder__reloadConfigOnChange=false
+      - CONNECTION_STRING="Host=db;Database=dab;username=postgres;password="
+    #healthcheck:
+    #  test: ["CMD-SHELL", "curl --silent --fail localhost:5000/api/Book || exit 1"]
+    #  interval: "30s"
+    volumes:
+      - ${PWD}/dab-config.json:/App/dab-config.json
+    networks:
+      - server-side
+      - client-side
+    depends_on:
+      db:
+        condition: service_healthy
   db:
-    image: postgres:latest
+    image: postgres:alpine
     restart: always
     container_name: db
     healthcheck:
-      test: /healthchecks/postgres.sh
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      #test: /healthchecks/postgres.sh
       interval: "30s"
     environment:
-      - POSTGRES_USER=${PGUSER}
-      - POSTGRES_PASSWORD=${PGPASSWORD}
-      - POSTGRES_DB=${PGDB}
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=dab
+      - POSTGRES_HOST_AUTH_METHOD=trust
     networks:
-      - dab-pg
+      - server-side
     ports:
       - 5432:5432
     volumes:
       - ./postgresql/library.postgresql.sql:/docker-entrypoint-initdb.d/data.sql
       - db-data:/var/lib/postgresql/data
-      - ./healthchecks:/healthchecks    
-
-  #dab:
-  #  image: "mcr.microsoft.com/azure-databases/data-api-builder:latest"
-  #  container_name: dab
-  #  ports:
-  #    - "5000:5000"
-  #  volumes:
-  #    - ./dab-config.PostgreSql.json:/App/dab-config.json       
-  #  networks:
-  #    - dab-pg
+      #- ./healthchecks:/healthchecks
 
 volumes:
   db-data:
     name: dab-postgresql
 
 networks:
-  dab-pg:
-    name: dab-postgresql
+  client-side: {}
+  server-side: {}

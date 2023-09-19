@@ -1,3 +1,3 @@
-# dab-postgresql
+# azure-dab-swa-postgresql
 
-> API using [Data Api Builder](https://aka.ms/dab) and PostgreSQL.
+> Demo using [Azure Data Api Builder](https://aka.ms/dab) with PostgreSQL db.

@@ -1,17 +1,9 @@
 MAKEFLAGS += --silent
 
-## https://github.com/Azure/data-api-builder/blob/main/docs/getting-started/getting-started-azure-postgresql.md
-dab: up
-	dab --version || dotnet tool install --global Microsoft.DataApiBuilder
-	dab start --no-https-redirect
-
-## https://azure.github.io/static-web-apps-cli/docs/cli/swa-start
-swa:
-	swa --version || npm install -g @azure/static-web-apps-cli
-	swa start ./client/src --api-devserver-url http://localhost:5000
+all: up test
 
 up:
-	docker-compose up -d
+	docker-compose up --force-recreate --remove-orphans -d #--pull always -d
 	sleep 1
 
 test:

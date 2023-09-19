@@ -104,25 +104,25 @@ INSERT INTO books_authors VALUES
     (6, 1018),
     (6, 1019),
     (6, 1020),
-    (7, 1017), 
-    (8, 1017), 
-    (9, 1017), 
+    (7, 1017),
+    (8, 1017),
+    (9, 1017),
     (10, 1017)
 ;
 
 CREATE OR REPLACE VIEW books_details
 AS
-    WITH aggregated_authors AS 
+    WITH aggregated_authors AS
     (
-        SELECT 
+        SELECT
             ba.book_id,
             STRING_AGG (CONCAT(a.first_name, ' ', a.middle_name ,' ', a.last_name) , ', ') as authors
         FROM
-            books_authors ba 
+            books_authors ba
         INNER JOIN
             authors a on ba.author_id = a.id
         GROUP BY
-            ba.book_id    
+            ba.book_id
     )
     SELECT
         b.id,
