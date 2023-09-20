@@ -7,10 +7,10 @@ WORKDIR /usr/share/nginx/html
 RUN apk add --update curl && \
     rm -rf /var/cache/apk/*
 
+ENV API_URL="#"
+
 RUN rm -rf /usr/share/nginx/html/*
 COPY ./nginx.conf /etc/nginx/templates/default.conf.template
 COPY ./src .
 EXPOSE 80
-
-ENV API_URL="#"
 CMD ["nginx", "-g", "daemon off;"]

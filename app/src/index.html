@@ -16,10 +16,16 @@
 </div>
 <script>
     (async function() {
-      let url = '<!--#echo var="ENV_API_URL" -->';
-      let json = await( await fetch(url)).json();
-      document.querySelector('#data').textContent = JSON.stringify(json);
-    }());
+        let url = '<!--#echo var="ENV_API_URL" -->';
+        let json = null;
+        try {
+          json = await( await fetch(url)).json();
+          document.querySelector('#data').textContent = JSON.stringify(json);
+        } catch(e) {
+          console.log('error');
+        }
+        console.log(json);
+      }());
 </script>
 </body>
 </html>
