@@ -1,44 +1,39 @@
 services:
   app:
-    image: swacli/static-web-apps-cli:latest
+    build:
+      context: app
     container_name: app
     restart: on-failure
-    working_dir: /workspace
-    command: swa start -p 3000 /workspace --api-devserver-url http://dab:5000
-    healthcheck:
-      test: ["CMD-SHELL", "curl --silent --fail localhost:3000/ || exit 1"]
-      interval: "30s"
-    volumes:
-      - ${PWD}/app/src:/workspace
     environment:
-      - DEBUG=*
-    networks:
-      - client-side
+      #- API_URL=http://dab:5000/api/Book
+      - API_URL=https://api.github.com/users/atrakic/repos
+    #volumes:
+    #  - ${PWD}/index.html:/usr/share/nginx/html/debug.html
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost || exit 1"]
+      interval: "30s"
     ports:
-      - 3000:3000
+      - 3000:80
     depends_on:
-      - dab
+      dab:
+        condition: service_healthy
   dab:
-    image: "mcr.microsoft.com/azure-databases/data-api-builder:latest"
+    build:
+      context: dab
     container_name: dab
-    ##entrypoint: ["echo", "Service dab disabled"]
-    #tty: true
-    #stdin_open: true
     ports:
       - "5000:5000"
     environment:
       - DOTNET_RUNNING_IN_CONTAINER=true
       - DOTNET_EnableDiagnostics=0
+      - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_hostBuilder__reloadConfigOnChange=false
-      - CONNECTION_STRING="Host=db;Database=dab;username=postgres;password="
-    #healthcheck:
-    #  test: ["CMD-SHELL", "curl --silent --fail localhost:5000/api/Book || exit 1"]
-    #  interval: "30s"
+      - CONNECTION_STRING=Host=db;Database=dab;username=postgres;password=
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:5000/api/Book || exit 1"]
+      interval: "30s"
     volumes:
       - ${PWD}/dab-config.json:/App/dab-config.json
-    networks:
-      - server-side
-      - client-side
     depends_on:
       db:
         condition: service_healthy
@@ -49,13 +44,13 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       #test: /healthchecks/postgres.sh
-      interval: "30s"
+      interval: 5s
+      timeout: 5s
+      retries: 5
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=dab
       - POSTGRES_HOST_AUTH_METHOD=trust
-    networks:
-      - server-side
     ports:
       - 5432:5432
     volumes:
@@ -66,7 +61,3 @@ services:
 volumes:
   db-data:
     name: dab-postgresql
-
-networks:
-  client-side: {}
-  server-side: {}

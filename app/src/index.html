@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>SWA App</title>
+  <title>Static App</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -10,14 +10,15 @@
 </head>
 <body>
 <div class="container">
-  <h2>SWA App</h2>
-  <div class="panel-body" id="data">Loading content from the API: ...</div>
+  <h2>Static App</h2>
+  <div>Loading content from the API <b><!--#echo var="ENV_API_URL" --></b></div>
+  <div class="panel-body" id="data">...</div>
 </div>
 <script>
     (async function() {
-        const json = await( await fetch(`/api/Book`)).json();
-        document.querySelector('#data').textContent = JSON.stringify(json);
-        console.log(json);
+      let url = '<!--#echo var="ENV_API_URL" -->';
+      let json = await( await fetch(url)).json();
+      document.querySelector('#data').textContent = JSON.stringify(json);
     }());
 </script>
 </body>
