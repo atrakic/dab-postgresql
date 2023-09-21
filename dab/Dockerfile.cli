@@ -1,5 +1,5 @@
 ARG VERSION=6.0
 FROM --platform=amd64 mcr.microsoft.com/dotnet/sdk:${VERSION}
-LABEL org.opencontainers.image.source="https://github.com/atrakic/dab-postgresql"
+LABEL maintainer="Admir Trakic <atrakic@users.noreply.github.com>"
 RUN dotnet tool install --global Microsoft.DataApiBuilder
 ENV PATH="$PATH:/root/.dotnet/tools"

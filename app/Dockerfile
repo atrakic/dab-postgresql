@@ -1,6 +1,5 @@
 FROM nginx:alpine
-LABEL org.opencontainers.image.description="Vanilla JS app that fetches data from API of your choice."
-LABEL org.opencontainers.image.source="https://github.com/atrakic/dab-postgresql"
+LABEL maintainer="Admir Trakic <atrakic@users.noreply.github.com>"
 WORKDIR /usr/share/nginx/html
 
 # used for healthchecks
