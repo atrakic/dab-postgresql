@@ -13,7 +13,7 @@ $ docker-compose up --build --no-deps --remove-orphans -d
 
 ## Access
 
-- [**Frontend**](http://localhost:3000/) with [Nginx+SSI and VanillaJS](https://nginx.org/en/docs/http/ngx_http_ssi_module.html)
+- [**Frontend**](http://localhost:3000/) with [Nginx+SSI](https://nginx.org/en/docs/http/ngx_http_ssi_module.html) and [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [**REST API**](http://localhost:5000/api/)
 - [**GraphQL**](http://localhost:5000/graphql/)
 

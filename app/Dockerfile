@@ -1,4 +1,5 @@
-FROM nginx:alpine
+ARG VERSION=alpine
+FROM nginx:${VERSION}
 LABEL maintainer="Admir Trakic <atrakic@users.noreply.github.com>"
 WORKDIR /usr/share/nginx/html
 

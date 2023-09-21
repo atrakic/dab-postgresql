@@ -6,7 +6,7 @@ services:
     container_name: app
     restart: on-failure
     environment:
-      - API_URL=http://dab:5000/api/Book
+      - API_URL=/api/Book
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost || exit 1"]
       interval: "30s"
@@ -32,7 +32,7 @@ services:
       - ASPNETCORE_hostBuilder__reloadConfigOnChange=false
       - CONNECTION_STRING=Host=db;Database=dab;username=postgres;password=
     healthcheck:
-      test: ["CMD-SHELL", "curl --silent --fail localhost:5000/api/Book || exit 1"]
+      test: ["CMD-SHELL", "curl --silent --fail localhost:5000/ || exit 1"]
       interval: "30s"
     volumes:
       - ${PWD}/config.json:/App/dab-config.json

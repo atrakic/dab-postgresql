@@ -17,13 +17,8 @@
 <script>
     (async function() {
         let url = '<!--#echo var="ENV_API_URL" -->';
-        let json = null;
-        try {
-          json = await( await fetch(url)).json();
-          document.querySelector('#data').textContent = JSON.stringify(json);
-        } catch(e) {
-          console.log('error');
-        }
+        json = await( await fetch(url)).json();
+        document.querySelector('#data').textContent = JSON.stringify(json);
         console.log(json);
       }());
 </script>
