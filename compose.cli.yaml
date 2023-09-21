@@ -1,0 +1,12 @@
+services:
+  ## Data API builder (DAB)
+  cli:
+    build:
+      context: dab
+      dockerfile: Dockerfile.cli
+    image: atrakic/dab/cli
+    command: dab --version
+    container_name: cli
+    working_dir: /workspace
+    volumes:
+      - ${PWD}:/workspace

@@ -2,11 +2,11 @@ services:
   app:
     build:
       context: app
+    image: atrakic/dab/app
     container_name: app
     restart: on-failure
     environment:
       - API_URL=http://dab:5000/api/Book
-      #- API_URL=https://api.github.com/users/atrakic/repos
     healthcheck:
       test: ["CMD-SHELL", "curl --silent --fail localhost || exit 1"]
       interval: "30s"
@@ -15,9 +15,13 @@ services:
     depends_on:
       dab:
         condition: service_healthy
+  ## Data API builder (DAB)
+  # https://github.com/Azure/data-api-builder
   dab:
     build:
       context: dab
+    image: atrakic/dab/backend
+    command: --ConfigFileName /App/dab-config.json
     container_name: dab
     ports:
       - "5000:5000"
@@ -31,7 +35,7 @@ services:
       test: ["CMD-SHELL", "curl --silent --fail localhost:5000/api/Book || exit 1"]
       interval: "30s"
     volumes:
-      - ${PWD}/dab-config.json:/App/dab-config.json
+      - ${PWD}/config.json:/App/dab-config.json
     depends_on:
       db:
         condition: service_healthy
@@ -40,8 +44,7 @@ services:
     restart: always
     container_name: db
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      #test: /healthchecks/postgres.sh
+      test: /healthchecks/postgres.sh
       interval: 5s
       timeout: 5s
       retries: 5
@@ -53,9 +56,8 @@ services:
       - 5432:5432
     volumes:
       - ./postgresql/library.postgresql.sql:/docker-entrypoint-initdb.d/data.sql
+      - ./healthchecks:/healthchecks
       - db-data:/var/lib/postgresql/data
-      #- ./healthchecks:/healthchecks
-
 volumes:
   db-data:
     name: dab-postgresql

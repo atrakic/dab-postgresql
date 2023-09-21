@@ -7,7 +7,7 @@ WORKDIR /usr/share/nginx/html
 RUN apk add --update curl && \
     rm -rf /var/cache/apk/*
 
-ENV API_URL="#"
+ENV API_URL="https://api.github.com/users/atrakic/repos"
 
 RUN rm -rf /usr/share/nginx/html/*
 COPY ./nginx.conf /etc/nginx/templates/default.conf.template
