@@ -1,28 +1,30 @@
 services:
   app:
     build:
-      context: app
+      context: ./src
     image: atrakic/dab/app
     container_name: app
     restart: on-failure
     environment:
       - API_URL=/api/Book
     healthcheck:
-      test: ["CMD-SHELL", "curl --silent --fail localhost || exit 1"]
-      interval: "30s"
+      test: ["CMD-SHELL", "curl -o /dev/null --fail localhost:80/healthcheck || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
     ports:
       - 3000:80
     depends_on:
-      dab:
+      api:
         condition: service_healthy
   ## Data API builder (DAB)
   # https://github.com/Azure/data-api-builder
-  dab:
+  api:
     build:
       context: dab
-    image: atrakic/dab/backend
+    image: atrakic/dab/api
     command: --ConfigFileName /App/dab-config.json
-    container_name: dab
+    container_name: api
     ports:
       - "5000:5000"
     environment:
