@@ -10,5 +10,4 @@ RUN set -x \
 WORKDIR /usr/share/nginx/html
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 COPY site ./
-COPY fetch-api-data.sh /docker-entrypoint.d/99-fetch-api-data.sh
-RUN chmod +x /docker-entrypoint.d/99-fetch-api-data.sh
+COPY --chmod=0755 fetch-api-data.sh /docker-entrypoint.d/99-fetch-api-data.sh
