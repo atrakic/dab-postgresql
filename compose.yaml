@@ -29,7 +29,7 @@ services:
     environment:
       - DOTNET_EnableDiagnostics=0
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_hostBuilder__reloadConfigOnChange=false
+      - ASPNETCORE_hostBuilder__reloadConfigOnChange=true
       - CONNECTION_STRING=Host=db;Database=dab;username=postgres;password=
     healthcheck:
       test: ["CMD-SHELL", "curl -o /dev/null --fail localhost:5000/ || exit 1"]
