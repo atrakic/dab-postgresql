@@ -13,7 +13,7 @@ $ docker-compose up --build --no-deps --remove-orphans -d
 
 ## Access
 
-- [**Frontend**](http://localhost:3000/) with plain [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+- [**Frontend**](http://localhost:3000/) with plain [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript),[BootstrapTable](https://github.com/wenzhixin/bootstrap-table)
 - [**REST API**](http://localhost:5000/api/)
 - [**GraphQL**](http://localhost:5000/graphql/)
 
