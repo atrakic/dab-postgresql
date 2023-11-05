@@ -59,7 +59,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./postgresql/library.postgresql.sql:/docker-entrypoint-initdb.d/data.sql
+      - ./postgresql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - ./healthchecks:/healthchecks
       - db-data:/var/lib/postgresql/data
 
