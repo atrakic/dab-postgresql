@@ -1,5 +1,5 @@
 ---
-name: Docker Build app
+name: Docker Build dab
 
 on:
   workflow_dispatch:
@@ -8,19 +8,19 @@ on:
       - main
     # only build when important files change
     paths:
-      - 'src/**'
+      - 'dab/**'
       - '.github/workflows/**'
     tags:
       - 'v*.*.*'
   pull_request:
     # only build when important files change
     paths:
-      - 'src/**'
+      - 'dab/**'
       - '.github/workflows/**'
 
 jobs:
   docker-build:
-    name: Docker Build App
+    name: Docker Build Dab
     uses: dockersamples/.github/.github/workflows/reusable-docker-build.yaml@main
 
     permissions:
@@ -44,7 +44,7 @@ jobs:
       ### A list of the account/repo names for docker build. List should match what's enabled above
       ### defaults to:
       image-names: |
-        ghcr.io/${{ github.repository }}-app
+        ghcr.io/${{ github.repository }}-dab
 
       ### set rules for tagging images, based on special action syntax:
       ### https://github.com/docker/metadata-action#tags-input
@@ -61,7 +61,7 @@ jobs:
 
       ### path to where docker should copy files into image
       ### defaults to root of repository (.)
-      context: ./src
+      context: ./dab
       
       ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
       # file: Containerfile
