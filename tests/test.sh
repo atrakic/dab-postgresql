@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -eo pipefail
+
 declare -a opts
 opts=(
   -sL
@@ -7,9 +10,11 @@ opts=(
   -H 'Accept: application/json'
 )
 
-opts+=(
- -H 'Authorization: Bearer ey...'
-)
+if [ -n "$API_TOKEN" ];then
+  opts+=(
+   -H "Authorization: Bearer '$API_TOKEN'"
+  )
+fi
 
 ## GRAPHQL
 curl "${opts[@]}" --data '{ "query": "{ books(first: 1, orderBy: { title: DESC }) { items { id title }}}" }' \

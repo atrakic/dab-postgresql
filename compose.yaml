@@ -25,12 +25,8 @@ services:
   api:
     build:
       context: dab
-    command: --ConfigFileName /App/dab-config.json
     container_name: api
-    ports:
-      - "5000:5000"
     environment:
-      - DOTNET_RUNNING_IN_CONTAINER=true
       - DOTNET_EnableDiagnostics=0
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_hostBuilder__reloadConfigOnChange=false
@@ -38,8 +34,11 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "curl -o /dev/null --fail localhost:5000/ || exit 1"]
       interval: "30s"
-    volumes:
-      - ${PWD}/config.json:/App/dab-config.json
+    #command: --ConfigFileName /App/dab-config.json
+    #volumes:
+    #  - ${PWD}/dab/config.json:/App/dab-config.json
+    ports:
+      - "5000:5000"
     depends_on:
       db:
         condition: service_healthy

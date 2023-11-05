@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 set -eo pipefail
 
 curl -o /dev/null -sf -X 'GET' \

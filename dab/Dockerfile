@@ -5,3 +5,6 @@ RUN set -x \
     && apt-get update \
     && apt-get install --no-install-recommends --no-install-suggests -y curl ca-certificates \
     && apt-get remove --purge --auto-remove -y && rm -rf /var/lib/apt/lists/*
+
+COPY config.json /App/dab-config.json
+CMD ["--ConfigFileName", "/App/dab-config.json"]
