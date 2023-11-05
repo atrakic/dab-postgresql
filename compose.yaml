@@ -1,12 +1,13 @@
 services:
+
+  # https://examples.bootstrap-table.com/#welcomes/from-url.html
   app:
     build:
       context: ./src
     image: atrakic/dab/app
     container_name: app
-    restart: on-failure
     environment:
-      - API_URL=/api/Book
+      - API_URL=http://api:5000/api/Book
     healthcheck:
       test: ["CMD-SHELL", "curl -o /dev/null --fail localhost:80/healthcheck || exit 1"]
       interval: 10s
@@ -17,6 +18,7 @@ services:
     depends_on:
       api:
         condition: service_healthy
+
   ## Data API builder (DAB)
   # https://github.com/Azure/data-api-builder
   api:
@@ -34,13 +36,14 @@ services:
       - ASPNETCORE_hostBuilder__reloadConfigOnChange=false
       - CONNECTION_STRING=Host=db;Database=dab;username=postgres;password=
     healthcheck:
-      test: ["CMD-SHELL", "curl --silent --fail localhost:5000/ || exit 1"]
+      test: ["CMD-SHELL", "curl -o /dev/null --fail localhost:5000/ || exit 1"]
       interval: "30s"
     volumes:
       - ${PWD}/config.json:/App/dab-config.json
     depends_on:
       db:
         condition: service_healthy
+
   db:
     image: postgres:alpine
     restart: always
@@ -60,6 +63,7 @@ services:
       - ./postgresql/library.postgresql.sql:/docker-entrypoint-initdb.d/data.sql
       - ./healthchecks:/healthchecks
       - db-data:/var/lib/postgresql/data
+
 volumes:
   db-data:
     name: dab-postgresql

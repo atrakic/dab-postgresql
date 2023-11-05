@@ -1,17 +1,15 @@
-ARG VERSION=alpine
+ARG VERSION=latest
 
 FROM nginx:${VERSION}
 LABEL maintainer="Admir Trakic <atrakic@users.noreply.github.com>"
 WORKDIR /usr/share/nginx/html
-
-# used for healthchecks
-RUN apk add --update curl && \
-    rm -rf /var/cache/apk/*
-
-ENV API_URL="https://api.github.com/users/atrakic/repos"
+RUN set -x \
+    && apt-get update \
+    && apt-get install --no-install-recommends --no-install-suggests -y curl ca-certificates jq gettext \
+    && apt-get remove --purge --auto-remove -y && rm -rf /var/lib/apt/lists/*
 
 RUN rm -rf /usr/share/nginx/html/*
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 COPY index.html ./
-COPY ./nginx.conf /etc/nginx/templates/default.conf.template
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+COPY fetch-data.sh /docker-entrypoint.d/99-fetch-data.sh
+RUN chmod +x /docker-entrypoint.d/99-fetch-data.sh
